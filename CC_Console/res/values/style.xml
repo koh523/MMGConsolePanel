@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+    <style name="my_theme" parent="@android:style/Theme.Holo">
+		<item name="android:seekBarStyle">@style/my_seekbar_style</item>
+		<item name="android:textViewStyle">@style/my_textview_style</item>>
+		<item name="android:editTextStyle">@style/my_edittext_style</item>
+		<item name="android:buttonStyle">@style/my_button_style</item>
+    </style>
+    <style name="my_edittext_style" parent="@android:style/Widget.EditText"></style>
+    <style name="my_seekbar_style" parent="@android:style/Widget.SeekBar"></style>
+    <style name="my_textview_style" parent="@android:style/Widget.TextView"></style>
+    <style name= "my_button_style" parent="@android:style/Widget.Button"></style>
+</resources>

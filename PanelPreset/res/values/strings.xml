@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="hello">Hello World, PanelPresetActivity!</string>
+    <string name="app_name">PanelPreset</string>
+    <string name="btn_apply">適用</string>
+    <string name="btn_commit">登録</string>
+    <string name="btn_cancel">キャンセル</string>
+
+</resources>

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="hello">Hello World, PanelFrontActivity!</string>
+    <string name="app_name">PanelFront</string>
+    <string name="caption_amp">AMP</string>
+    <string name="caption_brk">BRK</string>
+    <string name="caption_revp">REV_P[m]</string>
+    <string name="caption_revd">REV_D[m]</string>
+    <string name="caption_reve">REV_E[m]</string>
+    <string name="caption_omgp">OMG_P[m/sec]</string>
+    <string name="caption_omgd">OMG_D[m/sec]</string>
+    <string name="caption_volts">VOLT_S[V]</string>
+    <string name="caption_voltd">VOLD_D[V]</string>
+    <string name="caption_currd">CURR_D[A]</string>
+    <string name="caption_powd">POW_D[W]</string>
+    <string name="caption_button_start">START</string>
+    <string name="caption_button_stop">STOP</string>
+    <string name="caption_button_reload">Reload</string>
+    <string name="caption_d1">D1</string>
+    <string name="caption_d2">D2</string>
+    <string name="caption_d3">D3</string>
+    <string name="caption_d4">D4</string>
+    <string name="caption_s1">S1</string>
+    <string name="caption_s2">S2</string>
+    <string name="caption_s3">S3</string>
+    <string name="caption_s4">S4</string>
+    <string name="caption_r1">R1</string>
+    <string name="caption_r2">R2</string>
+    <string name="caption_b1">B1</string>
+    <string name="caption_b2">B2</string>
+    <string name="caption_b3">B3</string>
+    <string name="caption_b4">B4</string>
+    <string name="caption_b5">B5</string>
+    <string name="caption_st">ST</string>
+    <string name="caption_ts">TS</string>
+    <string name="caption_t1">T1</string>
+    <string name="caption_t2">T2</string>
+    <string name="caption_t3">T3</string>
+    <string name="caption_jtt">JTT</string>
+    <string name="caption_stt">STT</string>
+    <string name="caption_errchk">ERR CHECK</string>
+    <string name="caption_radiobutton_preset1">PRESET 1</string>
+    <string name="caption_radiobutton_preset2">PRESET 2</string>
+    <string name="caption_radiobutton_preset3">PRESET 3</string>
+
+</resources>

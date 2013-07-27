@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:gravity="center"
+            android:text="STATUS"
+            android:textSize="30sp" >
+        </TextView>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal" >
+
+            <include
+                android:id="@+id/group_status1"
+                layout="@layout/statusview_unit" >
+            </include>
+
+            <include
+                android:id="@+id/group_status2"
+                layout="@layout/statusview_unit" >
+            </include>
+
+            <include
+                android:id="@+id/group_status3"
+                layout="@layout/statusview_unit" >
+            </include>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal" >
+
+            <include
+                android:id="@+id/group_status4"
+                layout="@layout/statusview_unit" >
+            </include>
+
+            <include
+                android:id="@+id/group_status5"
+                layout="@layout/statusview_unit" >
+            </include>
+
+            <include
+                android:id="@+id/group_status6"
+                layout="@layout/statusview_unit" >
+            </include>
+        </LinearLayout>
+    </LinearLayout>
+
+    <RadioGroup
+        android:id="@+id/radiogroup_preset"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="80dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="-10dp"
+        android:orientation="horizontal" >
+
+        <RadioButton
+            android:id="@+id/radiobutton_preset1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:checked="false"
+            android:text="@string/caption_radiobutton_preset1" />
+
+        <RadioButton
+            android:id="@+id/radiobutton_preset2"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:checked="false"
+            android:text="@string/caption_radiobutton_preset2" />
+
+        <RadioButton
+            android:id="@+id/radiobutton_preset3"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+           	android:checked="false"
+            android:text="@string/caption_radiobutton_preset3" />
+    </RadioGroup>
+
+	<LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:layout_marginTop="20dp"
+            android:gravity="center"
+            android:text="CURRENT SETTINGS">
+            <!--
+            android:textSize="30sp" >
+            -->
+        </TextView>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal" >
+
+            <include
+                android:id="@+id/group_setting1"
+                layout="@layout/settingview_unit" >
+            </include>
+
+            <include
+                android:id="@+id/group_setting2"
+                layout="@layout/settingview_unit" >
+            </include>
+
+            <include
+                android:id="@+id/group_setting3"
+                layout="@layout/settingview_unit" >
+            </include>
+
+            <include
+                android:id="@+id/group_setting4"
+                layout="@layout/settingview_unit" >
+            </include>
+
+            <include
+                android:id="@+id/group_setting5"
+                layout="@layout/settingview_unit" >
+            </include>
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>

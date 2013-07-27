@@ -1,0 +1,20 @@
+<resources>
+
+    <string name="app_name">PanelPreference</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="menu_settings">Settings</string>
+    <string name="title_activity_panel_preference">PanelPreference</string>
+    <string name="configure_ip">ネットワーク設定</string>
+    <string name="caption_target_ipaddress">ターゲット・IPアドレス</string>
+    <string name="dialog_title_target_ipaddress">Enter IP adress for the target</string>
+    <string name="caption_target_ipport">ターゲット・ポート番号</string>
+    <string name="dialog_tittle_tareget_ipport">Enter port number for the target</string>
+    <string name="caption_enable_network">ネットワークを有効にする</string>
+    <string name="configuer_climer">クライマー設定</string>
+    <string name="caption_climiermode_freerun">Free Runモード</string>
+    <string name="dialog_title_session_interval">Enter interval time in msec</string>
+    <string name="caption_session_interval">セッション間インターバル[msec]</string>
+    <string name="dialog_title_session_timelimit">Enter time limit in msec</string>
+    <string name="caption_session_timelimit">セッション許容最長時間[msec]</string>
+
+</resources>

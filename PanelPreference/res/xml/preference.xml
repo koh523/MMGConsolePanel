@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    android:key = "preference_screen" >
+    <PreferenceCategory android:title="@string/configure_ip" >
+        <CheckBoxPreference
+            android:key="flag_enable_network"
+            android:title="@string/caption_enable_network" android:order="1"/>
+        <EditTextPreference
+            android:dialogTitle="@string/dialog_title_target_ipaddress"
+            android:key="target_ip_adress"
+            android:order="2"
+            android:title="@string/caption_target_ipaddress" />
+        <EditTextPreference
+            android:dialogTitle="@string/dialog_tittle_tareget_ipport"
+            android:key="target_ip_port"
+            android:order="3"
+            android:title="@string/caption_target_ipport" >
+        </EditTextPreference>
+        <EditTextPreference
+            android:dialogTitle="@string/dialog_title_session_interval"
+            android:key="session_interval"
+            android:order="4"
+            android:title="@string/caption_session_interval">
+        </EditTextPreference>
+        <EditTextPreference
+            android:dialogTitle="@string/dialog_title_session_timelimit"
+            android:key="session_timelimit"
+            android:order="5"
+            android:title="@string/caption_session_timelimit">
+        </EditTextPreference>
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/configuer_climer" >
+        <CheckBoxPreference
+            android:key="flag_climermode_freerun"
+            android:title="@string/caption_climiermode_freerun" />
+    </PreferenceCategory>
+</PreferenceScreen>
