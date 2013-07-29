@@ -10,8 +10,12 @@ import java.util.concurrent.RejectedExecutionException;
 
 import android.app.Activity;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.app.DialogFragment;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.Cursor;
@@ -35,6 +39,7 @@ import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import jp.aiaida.panelfront.PanelFrontActivity.FragmentFront;
 import jp.aiaida.panelpreference.PanelPreferenceActivity.FragmentPreference;
 import jp.aiaida.panelpreset.DataBaseHelper;
 import jp.aiaida.panelpreset.PanelPresetActivity;
@@ -85,6 +90,11 @@ public class PanelFrontActivity extends Activity {
     static final String TARGET_STATUS_CURRD = "CURR_D";
     static final String TARGET_STATUS_POWD = "POW_D";
 
+    private FragmentFront myFragment;
+    private FragmentTransaction fragmentTransaction;
+    private ProgressDialog mProgressDialog;
+
+    private final static boolean USE_SENDCOMMAND_ONEBYONE = false;
 
 	/** Called when the activity is first created. */
     @Override
@@ -92,12 +102,23 @@ public class PanelFrontActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
 
-        Fragment newFragment = FragmentFront.newInstance();
-        FragmentTransaction ft = getFragmentManager().beginTransaction();
-        ft.add(R.id.fragment_content, newFragment).commit();
+        myFragment = FragmentFront.newInstance();
+        fragmentTransaction = getFragmentManager().beginTransaction();
+        fragmentTransaction.add(R.id.fragment_content, myFragment).commit();
     }
 
-    public static class FragmentFront extends Fragment implements Runnable, SocketClientTaskCallback{
+    void showDialog(){
+    	//myFragment.show(fragmentTransaction, "PRESET");	// この方法は有効ではない。
+    	mProgressDialog = new ProgressDialog(this);
+    	mProgressDialog.setTitle("now loading...");
+    	mProgressDialog.show();
+    }
+
+    void dismissDialog(){
+    	mProgressDialog.dismiss();
+    }
+
+	public static class FragmentFront extends Fragment implements Runnable, SocketClientTaskCallback{
 		Button btnStart;
     	Button btnStop;
     	Button btnReload;
@@ -107,8 +128,10 @@ public class PanelFrontActivity extends Activity {
        	HashMap<String, SliderProperty> sliderPropMap = new HashMap<String, SliderProperty>();
        	String latestResponse = null;
 
-        String ip_address_server;
-        String ip_port_server;
+        private String ip_address_server;
+        private String ip_port_server;
+        private int mTimeLimit;
+        private int mSessionInterval;
         boolean flagEnableNetwork;
         boolean flagClimerModeFreerun;
 
@@ -118,6 +141,7 @@ public class PanelFrontActivity extends Activity {
 		private String mThisPackageName;
 		private Handler mHandler;
 
+		ProgressDialog myProgressDialog;
 
         public static FragmentFront newInstance(){
     		FragmentFront ff = new FragmentFront();
@@ -155,6 +179,8 @@ public class PanelFrontActivity extends Activity {
 	        ip_port_server = myPreferenceFile.getString(FragmentPreference.KEY_TARGET_IP_PORT, DEFALT_IP_PORT_SERVER);
 	        flagEnableNetwork = myPreferenceFile.getBoolean(FragmentPreference.KEY_FLAG_ENABLE_NETWORK, false);
 	        flagClimerModeFreerun = myPreferenceFile.getBoolean(FragmentPreference.KEY_FLAG_CLIMERMODE_FREERUN, false);
+	        mTimeLimit = Integer.valueOf(myPreferenceFile.getString(FragmentPreference.KEY_SESSION_TIMELIMIT, "4000"));
+	        mSessionInterval = Integer.valueOf(myPreferenceFile.getString(FragmentPreference.KEY_SESSION_INTERVAL, "200"));
 			View fragView = inflater.inflate(R.layout.panel_front, container, false);
 
 /*-----       Layout for current STAUTS displays      ----*/
@@ -526,6 +552,25 @@ public class PanelFrontActivity extends Activity {
 			return fragView;
 		}
 
+		/* (非 Javadoc)
+		 * @see android.app.DialogFragment#onCreateDialog(android.os.Bundle)
+		 */
+		/*
+		@Override
+		public Dialog onCreateDialog(Bundle savedInstanceState) {
+
+			progressDialog = new ProgressDialog(getActivity());
+	        progressDialog.setTitle("Loading Preset ");
+	        progressDialog.setMessage("now loading ...");
+	        progressDialog.setIndeterminate(false);
+	        progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+	        progressDialog.incrementProgressBy(1);
+	        progressDialog.setCancelable(false);
+
+			//return super.onCreateDialog(savedInstanceState);
+	        return progressDialog;
+		}
+		*/
 
 	    @Override
 		public void onResume() {
@@ -533,13 +578,12 @@ public class PanelFrontActivity extends Activity {
 	    }
 
 	    private final OnCheckedChangeListener rgCheckedChangeLister = new OnCheckedChangeListener(){
-	    	public void onCheckedChanged(RadioGroup group, int resid) {
+	    	@SuppressWarnings("unused")
+			public void onCheckedChanged(RadioGroup group, int resid) {
 				int page = 0;
 
 		        if (-1 == resid) {
-		            Toast.makeText((Context)fragmentfront.getActivity(),
-		                    "クリアされました",
-		                    Toast.LENGTH_SHORT).show();
+		            Toast.makeText((Context)fragmentfront.getActivity(), "クリアされました", Toast.LENGTH_SHORT).show();
 		        } else {
 		        	if (resid == R.id.radiobutton_preset1){
 		        		page = 1;
@@ -554,9 +598,20 @@ public class PanelFrontActivity extends Activity {
 		        		page = 1;
 		        	}
 		        }
+		        if (USE_SENDCOMMAND_ONEBYONE == true){
+		        	sendParamsByOne(page);
+		        } else{
+		        	sendParams(page);
+		        }
+	    	}
 
+	    	private void sendParamsByOne(int page) {
 		        // DBから 指定のpresetセットの読み出し
 		        HashMap<String, Long> presetSet = PresetSet.getPresetSet(getActivity(), page);
+
+		        //((PanelFrontActivity)getActivity()).showDialog();
+		        //((Mmg_consoleActivity)getActivity()).showDialog();
+
 		    	for (Iterator<Entry<String, Long>> it = presetSet.entrySet().iterator(); it.hasNext(); ){
 		    		Entry<String, Long> entry = it.next();
 
@@ -572,12 +627,11 @@ public class PanelFrontActivity extends Activity {
 		        	String cmd = "SET_" + key + " = " + arg;
 		        	Log.d("preset loading", cmd);
 			        if (true == flagEnableNetwork){
-				        SocketClientTask task = new SocketClientTask(ip_address_server, ip_port_server, (SocketClientTaskCallback)fragmentfront);
+				        SocketClientTask task = new SocketClientTask(ip_address_server, ip_port_server, mTimeLimit, (SocketClientTaskCallback)fragmentfront);
 			        	task.execute(cmd);
 			        	try {
-							Thread.sleep(200);
+							Thread.sleep(mSessionInterval);
 						} catch (InterruptedException e) {
-							// TODO 自動生成された catch ブロック
 							e.printStackTrace();
 						}
    					}
@@ -587,20 +641,75 @@ public class PanelFrontActivity extends Activity {
 	        	Log.d("preset loading", cmd);
 
 		    	if (true == flagEnableNetwork){
-		    		SocketClientTask task = new SocketClientTask(ip_address_server, ip_port_server, (SocketClientTaskCallback)fragmentfront);
-		    		task.execute(cmd);
+		    		SocketClientTask task0 = new SocketClientTask(ip_address_server, ip_port_server, mTimeLimit, (SocketClientTaskCallback)fragmentfront);
+		    		task0.execute(cmd);
 		    		try {
-						Thread.sleep(200);
+						Thread.sleep(mSessionInterval);
 					} catch (InterruptedException e) {
-						// TODO 自動生成された catch ブロック
 						e.printStackTrace();
 					}
 
-		    		task = new SocketClientTask(ip_address_server, ip_port_server, (SocketClientTaskCallback)fragmentfront);
-		    		task.execute("lsdat");
+		    		SocketClientTask task1 = new SocketClientTask(ip_address_server, ip_port_server, mTimeLimit, (SocketClientTaskCallback)fragmentfront);
+		    		task1.execute("lsdat");
+		    		try {
+						Thread.sleep(mSessionInterval);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+
+		    		SocketClientTask task2 = new SocketClientTask(ip_address_server, ip_port_server, mTimeLimit, (SocketClientTaskCallback)fragmentfront);
+		    		task2.execute("save");
+		    		try {
+						Thread.sleep(mSessionInterval);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
 		    	}
-			}
-		};
+		        //((PanelFrontActivity)getActivity()).dismissDialog();
+	    	}
+
+	    	private void sendParams(int page){
+	    		StringBuilder sbMulSentence = new StringBuilder();
+		        // DBから 指定のpresetセットの読み出し
+		        HashMap<String, Long> presetSet = PresetSet.getPresetSet(getActivity(), page);
+
+		        for (Iterator<Entry<String, Long>> it = presetSet.entrySet().iterator(); it.hasNext(); ){
+		    		Entry<String, Long> entry = it.next();
+
+		    		String key = (String)entry.getKey();
+		    		Long value = (Long)entry.getValue();
+		    		String arg = null;
+		    		if (key == "SW"){
+		    			arg = flagClimerModeFreerun == true? "ON":"OFF";
+		    		}else{
+		    			SliderProperty property = sliderPropMap.get(key);
+		    			arg = FragmentPreset.FormatedIndicator(value, property);
+		    		}
+		        	String cmd = "SET_" + key + " = " + arg +";";
+		        	Log.d("preset loading", cmd);
+		        	sbMulSentence.append(cmd);
+		        }
+		        sbMulSentence.append("save");
+		        String msg = sbMulSentence.toString();
+		        Log.i("preload msg", msg);
+		        if (true == flagEnableNetwork){
+			        SocketClientTask task = new SocketClientTask(ip_address_server, ip_port_server, mTimeLimit, (SocketClientTaskCallback)fragmentfront);
+		        	task.execute(msg);
+		        	try {
+						Thread.sleep(mSessionInterval);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+		    		SocketClientTask task1 = new SocketClientTask(ip_address_server, ip_port_server, mTimeLimit, (SocketClientTaskCallback)fragmentfront);
+		    		task1.execute("lsdat");
+		    		try {
+						Thread.sleep(mSessionInterval);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+		        }
+	    	}
+	    };
 
 		private final OnClickListener buttnClickListener = new OnClickListener(){
 			public void onClick(View v) {
@@ -618,7 +727,7 @@ public class PanelFrontActivity extends Activity {
 					strRequest = "lsdat";
 				}
 				if (true == flagEnableNetwork){
-					SocketClientTask task = new SocketClientTask(ip_address_server, ip_port_server, (SocketClientTaskCallback)fragmentfront);
+					SocketClientTask task = new SocketClientTask(ip_address_server, ip_port_server, mTimeLimit, (SocketClientTaskCallback)fragmentfront);
 					task.execute(strRequest);
 				}
 			}
@@ -634,7 +743,7 @@ public class PanelFrontActivity extends Activity {
 				}
 				/*
 				 * Threadのなかで さらにThreadを生成することはできない模様。
-				SocketClientTask task = new SocketClientTask(ip_address_server, ip_port_server, (SocketClientTaskCallback)fragmentfront);
+				SocketClientTask task = new SocketClientTask(ip_address_server, ip_port_server, mTimeLimit, (SocketClientTaskCallback)fragmentfront);
 				task.execute("lsdat");
 				*/
 
@@ -647,7 +756,7 @@ public class PanelFrontActivity extends Activity {
 				Log.d("hander", "called");
 				if (true == flagEnableNetwork){
 					try{
-						SocketClientTask task = new SocketClientTask(ip_address_server, ip_port_server, (SocketClientTaskCallback)fragmentfront);
+						SocketClientTask task = new SocketClientTask(ip_address_server, ip_port_server, mTimeLimit,(SocketClientTaskCallback)fragmentfront);
 						task.execute("lsdat");
 					}catch(RejectedExecutionException e){
 						// AsyncTaskを多数発行し、内部キューサイズを超えるとこの例外が発生する。
@@ -705,13 +814,17 @@ public class PanelFrontActivity extends Activity {
 			}else{
 				Log.d("preset loader", "succeeded: "+ cmd);
 			}
-
 		}
 
 
 		public void onFailed(String cmd, int code) {
 			//Toast.makeText((Context)fragmentfront.getActivity(), "falied socket taslt", Toast.LENGTH_SHORT).show();
-			Log.d("preset loader", "failed: " + cmd + ", reason: " + code);
+			Log.e("preset loader", "failed: " + cmd + ", reason: " + code);
+			AlertDialog.Builder dlg = new AlertDialog.Builder(getActivity());
+			dlg.setTitle("Preset Loading");
+			dlg.setMessage("Failed. Try it again");
+			dlg.setPositiveButton("OK", null);
+			dlg.show();
 		}
 
 		private void setDataBase() {
@@ -727,6 +840,16 @@ public class PanelFrontActivity extends Activity {
 			}
 		}
 
+		   void showDialog(){
+		    	//myFragment.show(fragmentTransaction, "PRESET");	// この方法は有効ではない。
+		    	myProgressDialog = new ProgressDialog(getActivity());
+		    	myProgressDialog.setTitle("now loading...");
+		    	myProgressDialog.show();
+		    }
+
+		    void dismissDialog(){
+		    	myProgressDialog.dismiss();
+		    }
 
 		String sample =
 				"> --- SETTING ---\n" +
