@@ -71,6 +71,20 @@ public class Mmg_consoleActivity extends Activity {
                 .setText(text)
                 .setTabListener(new TabListener<FragmentPreset>(this, FragmentPreset.class, text, args)));
 
+        args = new Bundle();
+        args.putInt("page", 4);
+        text = "PRESET4";
+        bar.addTab(bar.newTab()
+                .setText(text)
+                .setTabListener(new TabListener<FragmentPreset>(this, FragmentPreset.class, text, args)));
+
+        args = new Bundle();
+        args.putInt("page", 5);
+        text = "PRESET5";
+        bar.addTab(bar.newTab()
+                .setText(text)
+                .setTabListener(new TabListener<FragmentPreset>(this, FragmentPreset.class, text, args)));
+
         text = "TERMINAL";
         bar.addTab(bar.newTab()
                 .setText(text)

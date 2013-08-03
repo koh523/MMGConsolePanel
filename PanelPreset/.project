@@ -3,6 +3,8 @@
 	<name>PanelPreset</name>
 	<comment></comment>
 	<projects>
+		<project>PanelPreference</project>
+		<project>PanelTerminal</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>
