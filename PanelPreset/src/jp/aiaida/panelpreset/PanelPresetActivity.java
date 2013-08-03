@@ -319,6 +319,22 @@ public class PanelPresetActivity extends Activity {
 							Log.d("sender", cmd);
 						}
 					}
+					String cmd = "SAVE = " +  m_page;
+					if (flagEnableNetwork == true){
+
+						SocketClientTask task = new SocketClientTask(ip_address_server, ip_port_server, mTimeLimit, (SocketClientTaskCallback)fragmentpreset);
+						Log.d("sender", cmd);
+						task.execute(cmd);
+						try {
+							Thread.sleep(mSessionInterval);
+						} catch (InterruptedException e) {
+							// TODO 自動生成された catch ブロック
+							e.printStackTrace();
+						}
+
+					}else{
+						Log.d("sender", cmd);
+					}
 				}
 				if (view == btnCommit) {
 					ContentValues cv = new ContentValues();
