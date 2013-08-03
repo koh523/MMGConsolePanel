@@ -2,7 +2,7 @@ package jp.aiaida.mmg;
 
 import jp.aiaida.panelfront.PanelFrontActivity.FragmentFront;
 import jp.aiaida.panelpreference.PanelPreferenceActivity;
-import jp.aiaida.panelpreference.R;
+//import jp.aiaida.panelpreference.R;
 import jp.aiaida.panelpreference.PanelPreferenceActivity.FragmentPreference;
 import jp.aiaida.panelpreset.PanelPresetActivity.FragmentPreset;
 import jp.aiaida.panelterminal.PanelTerminalActivity.FragmentTerminal;

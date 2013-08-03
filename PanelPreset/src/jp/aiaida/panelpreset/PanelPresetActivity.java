@@ -256,7 +256,11 @@ public class PanelPresetActivity extends Activity {
 						TextView textview = (TextView)arrayDigitviews[i];
 
 						// build up command message
-						String cmd = "SET_" + property.getName() + " = " +  textview.getText();
+						//String cmd = "SET_" + property.getName() + " = " +  textview.getText();
+						float value = Float.parseFloat(textview.getText().toString());
+						//String cmd = String.format("SET_" + property.getName() + " = " + "%10d.%02d", (int)value, (value*100.0)%100);  // 複数の%はサポートされていない？
+						//String cmd = String.format("SET_" + property.getName() + " = %1$6d", (int)value) + String.format(".%1$02d",  (int)(value*100.0)%100);　// 1$は不要？
+						String cmd = String.format("SET_" + property.getName() + " = %6d", (int)value) + String.format(".%02d",  (int)(value*100.0)%100);
 
 /* 第一案
 	動作はするが、時間がかかる。
