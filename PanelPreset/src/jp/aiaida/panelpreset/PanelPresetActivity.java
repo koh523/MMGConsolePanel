@@ -319,7 +319,8 @@ public class PanelPresetActivity extends Activity {
 							Log.d("sender", cmd);
 						}
 					}
-					String cmd = "SAVE = " +  m_page;
+					//String cmd = "SAVE = " +  m_page;
+					String cmd = "SAVE   = " +  String.format("%6d", m_page)+ ".00";
 					if (flagEnableNetwork == true){
 
 						SocketClientTask task = new SocketClientTask(ip_address_server, ip_port_server, mTimeLimit, (SocketClientTaskCallback)fragmentpreset);
