@@ -624,6 +624,7 @@ public class PanelFrontActivity extends Activity {
 		    			SliderProperty property = sliderPropMap.get(key);
 		    			arg = FragmentPreset.FormatedIndicator(value, property);
 		    		}
+/*		    		MMG5では FrontPanelからコマンドを送信しない。MMG本体のプリセットファイルをロードする
 		        	String cmd = "SET_" + key + " = " + arg;
 		        	Log.d("preset loading", cmd);
 			        if (true == flagEnableNetwork){
@@ -635,7 +636,8 @@ public class PanelFrontActivity extends Activity {
 							e.printStackTrace();
 						}
    					}
-		        }
+*/
+		    		}
 	    		String arg = flagClimerModeFreerun == true? "ON":"OFF";
 	    		String cmd = "SET_SW = " + arg;
 	        	Log.d("preset loading", cmd);

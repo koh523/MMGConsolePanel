@@ -248,6 +248,7 @@ public class PanelPresetActivity extends Activity {
 
 		private final OnClickListener buttonClickListener = new OnClickListener() {
 			public void onClick(View view) {
+				String cmd = "";
 				//Toast.makeText(getActivity(), "Button pressed", Toast.LENGTH_SHORT).show();
 				if (view == btnApply) {
 					// SocketClientTaskを開始して ターゲットに設定コマンドを発行する。
@@ -260,7 +261,7 @@ public class PanelPresetActivity extends Activity {
 						float value = Float.parseFloat(textview.getText().toString());
 						//String cmd = String.format("SET_" + property.getName() + " = " + "%10d.%02d", (int)value, (value*100.0)%100);  // 複数の%はサポートされていない？
 						//String cmd = String.format("SET_" + property.getName() + " = %1$6d", (int)value) + String.format(".%1$02d",  (int)(value*100.0)%100);　// 1$は不要？
-						String cmd = String.format("SET_" + property.getName() + " = %6d", (int)value) + String.format(".%02d",  (int)(value*100.0)%100);
+						cmd += String.format("SET_" + property.getName() + " = %6d", (int)value) + String.format(".%02d",  (int)(value*100.0)%100) + ";";
 
 /* 第一案
 	動作はするが、時間がかかる。
@@ -304,6 +305,7 @@ public class PanelPresetActivity extends Activity {
 */
 
 // 暫定処理
+/*
 						if (flagEnableNetwork == true){
 							SocketClientTask task = new SocketClientTask(ip_address_server, ip_port_server, mTimeLimit, (SocketClientTaskCallback)fragmentpreset);
 							Log.d("sender", cmd);
@@ -318,9 +320,10 @@ public class PanelPresetActivity extends Activity {
 						}else{
 							Log.d("sender", cmd);
 						}
-					}
+*/
+						}
 					//String cmd = "SAVE = " +  m_page;
-					String cmd = "SAVE   = " +  String.format("%6d", m_page)+ ".00";
+					cmd += "SAVE   = " +  String.format("%6d", m_page)+ ".00;  ";
 					if (flagEnableNetwork == true){
 
 						SocketClientTask task = new SocketClientTask(ip_address_server, ip_port_server, mTimeLimit, (SocketClientTaskCallback)fragmentpreset);
